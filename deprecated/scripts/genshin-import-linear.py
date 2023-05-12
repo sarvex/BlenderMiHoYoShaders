@@ -33,20 +33,20 @@ class GI_OT_GenshinImportTextures(Operator, ImportHelper):
 
     def execute(self, context):
         directory = os.path.dirname(self.filepath)
-        
+
         for name, folder, files in os.walk(directory):
-            for file in files :
+            for file in files:
                 # load the file with the correct alpha mode
-                img_path = directory + "/" + file
+                img_path = f"{directory}/{file}"
                 img = bpy.data.images.load(filepath = img_path, check_existing=True)
                 img.alpha_mode = 'CHANNEL_PACKED'
-                
+
                 # declare body and face mesh variables
                 body_var = bpy.context.scene.objects["Body"]
                 # face_var = bpy.context.scene.objects["Face"]
-                
+
                 # Implement the texture in the correct node
-                if "Hair_Diffuse" in file :
+                if "Hair_Diffuse" in file:
                     bpy.context.view_layer.objects.active = body_var
                     bpy.context.object.material_slots.get('miHoYo - Genshin Hair').material.node_tree.nodes['Hair_Diffuse_UV0'].image = img
                     bpy.context.object.material_slots.get('miHoYo - Genshin Hair').material.node_tree.nodes['Hair_Diffuse_UV1'].image = img
@@ -94,9 +94,6 @@ class GI_OT_GenshinImportTextures(Operator, ImportHelper):
                     bpy.data.node_groups['Face Lightmap'].nodes['Face_Lightmap'].image = img
                 elif "MetalMap" in file :
                     bpy.data.node_groups['Metallic Matcap'].nodes['MetalMap'].image = img
-                else :
-                    pass
-            
         return {'FINISHED'}
 
 
